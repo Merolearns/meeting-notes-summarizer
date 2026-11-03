@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meeting Notes Summarizer</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+{% if not result %}
+<main class="page">
+  <div class="hero">
+    <h1>Meeting Notes Summarizer</h1>
+    <p>Paste a transcript to extract a TL;DR, key points, decisions, action items, and participants.</p>
+  </div>
+
+  {% if error %}
+    <div class="error" role="alert">{{ error }}</div>
+  {% endif %}
+
+  <form method="post" action="/summarize">
+    <div class="card">
+      <label class="eyebrow" for="transcript">Transcript</label>
+      <textarea id="transcript" name="transcript" class="transcript-input" minlength="10" required>{{ transcript or sample }}</textarea>
+    </div>
+
+    <fieldset class="card mode-row">
+      <legend class="eyebrow">Summary mode</legend>
+      <label>
+        <input type="radio" name="mode" value="local" {% if mode != 'ai' %}checked{% endif %}>
+        Local engine (default)
+      </label>
+      <label>
+        <input type="radio" name="mode" value="ai" {% if mode == 'ai' %}checked{% endif %} {% if not llm_on %}disabled{% endif %}>
+        AI-enhanced
+        {% if not llm_on %}<span class="chip">needs OPENAI_API_KEY</span>{% endif %}
+      </label>
+    </fieldset>
+
+    <div class="form-actions">
+      <button type="button" class="btn btn-ghost" id="load-sample">Load sample</button>
+      <button type="submit" class="btn btn-primary">Summarize</button>
+    </div>
+  </form>
+</main>
+
+<script>
+  const sample = {{ sample | tojson }};
+  document.getElementById('load-sample').addEventListener('click', () => {
+    document.getElementById('transcript').value = sample;
+  });
+</script>
+
+{% else %}
+<header class="topbar">
+  <a href="/" class="btn btn-ghost">New notes</a>
+  <form method="post" action="/download">
+    <input type="hidden" name="transcript" value="{{ transcript }}">
+    <input type="hidden" name="mode" value="{{ mode }}">
+    <button type="submit" class="btn btn-ghost">Download .md</button>
+  </form>
+</header>
+
+<main class="page">
+  <h1 class="results-title">Meeting notes</h1>
+
+  <div class="stats">
+    <div class="stat-chip"><strong>{{ result.stats.words }}</strong><span>words</span></div>
+    <div class="stat-chip"><strong>{{ result.stats.turns }}</strong><span>turns</span></div>
+    <div class="stat-chip"><strong>{{ result.stats.speakers }}</strong><span>speakers</span></div>
+    <div class="stat-chip"><strong>~{{ result.stats.reading_minutes }}</strong><span>min read</span></div>
+    <div><span class="mode-badge">{{ 'AI-enhanced' if mode == 'ai' else 'Local engine' }}</span></div>
+  </div>
+
+  <section class="card">
+    <span class="eyebrow">TL;DR</span>
+    <p class="tldr">{{ result.tldr }}</p>
+  </section>
+
+  <section class="card">
+    <span class="eyebrow">Key points</span>
+    <ol class="keypoints">
+      {% for point in result.key_points %}
+        <li>{{ point }}</li>
+      {% endfor %}
+    </ol>
+  </section>
+
+  <section class="card">
+    <span class="eyebrow">Decisions</span>
+    <ul class="decisions">
+      {% for decision in result.decisions %}
+        <li>{{ decision }}</li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  <section class="card">
+    <span class="eyebrow">Action items</span>
+    <ul class="actions">
+      {% for item in result.actions %}
+        <li class="action-card">
+          <input type="checkbox" id="action-{{ loop.index }}" onchange="this.closest('.action-card').classList.toggle('done', this.checked)">
+          <div class="action-body">
+            <label for="action-{{ loop.index }}">{{ item.text }}</label>
+            <div class="action-meta">
+              {% if item.owner %}<span class="owner-chip">{{ item.owner }}</span>{% endif %}
+              {% if item.due %}<span class="due-chip">{{ item.due }}</span>{% endif %}
+            </div>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  <section class="card">
+    <span class="eyebrow">Participants</span>
+    <div class="participants">
+      {% for person in result.speakers %}
+        <span class="chip">{{ person }}</span>
+      {% endfor %}
+    </div>
+  </section>
+</main>
+{% endif %}
+</body>
+</html>
