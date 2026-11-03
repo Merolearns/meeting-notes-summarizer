@@ -1,0 +1,42 @@
+Amr: Good morning, everyone. Let's keep this tight. We're two weeks from beta, so I want to lock the onboarding, push notification, and tester recruitment plans today.
+Lidia: Sounds good. I walked through the latest onboarding prototype last night. It's five screens right now, but the drop-off looks steep after screen three.
+Omar: That matches what I saw in the analytics stub. Five screens feels heavy for a beta where people already opted in.
+Hana: I disagree. I think we need all five to explain permissions, privacy, and how beta feedback works. Cutting anything risks confusion later.
+Lidia: What if we combine the privacy and beta feedback notes into one screen? That keeps the story clear without losing required info.
+Amr: I like that. We'll go with four screens total: welcome, value prop, permissions plus beta expectations, and account creation. That resolves it.
+Hana: Okay, as long as the beta expectations stay explicit.
+Omar: On push notifications, I recommend we ask for permission only after the user completes their first scan, not during onboarding.
+Lidia: Actually, I'd ask right after account creation while context is fresh. If we wait, some users may never hit the prompt.
+Omar: But the iOS guidelines favor asking after a value moment. A premature prompt tanks acceptance rates.
+Amr: Let's compromise. We'll trigger the push opt-in after the user finishes their first successful action, which is usually the scan. That's still value-based and not in the onboarding flow.
+Lidia: Fair enough. We agreed on that timing.
+Hana: Good. Now, what about the actual push content? We need a clear policy so beta testers don't feel spammed.
+Amr: Decided: beta push notifications are limited to weekly digest, feedback requests, and critical outage alerts. No marketing messages.
+Omar: I'll add those categories to the notification service so we can toggle them remotely.
+Hana: Action item: Hana will draft the push notification copy for each category by Friday.
+Lidia: Action item: Lidia will update the onboarding mocks to four screens before Monday.
+Amr: Perfect. On beta recruitment, we currently have sixty sign-ups from the landing page. We need at least two hundred for meaningful signal.
+Omar: Do we open it to the public waitlist or keep it invite-only for this round?
+Hana: I'd prefer invite-only so we can control device diversity and NDA coverage.
+Lidia: Public waitlist is faster, but the feedback quality might be noisy. Invite-only is safer for a first beta.
+Amr: We decided to keep the beta invite-only, with each invited user allowed to refer one other tester. That gives us control and some growth.
+Hana: Great. I'll prepare the referral codes and NDA flow.
+Omar: The referral flow needs to hook into the invite redemption API. I can build that next.
+Amr: Action item: Omar will implement referral redemption and send test invites to the design and QA team by Wednesday.
+Hana: Action item: Hana will set up the beta feedback channel in Slack and add the onboarding help links before Monday.
+Lidia: Hana, can you review the four-screen copy for tone once I finish it?
+Hana: Definitely. Add it as a comment in Figma and I'll review by Thursday.
+Amr: Let's also finalize the beta success metrics. We agreed to track onboarding completion rate, push opt-in rate, day-seven retention, and feedback submissions.
+Omar: I'll instrument those events. Action item: Omar will add analytics instrumentation for the four metrics by end of week.
+Lidia: Should we include crash-free session rate too? I think it matters for beta confidence.
+Amr: Good point. Let's include it. We should treat it as a launch gate.
+Hana: Agreed. If crash-free rate drops below ninety-five percent, we pause the rollout.
+Amr: Decided. That's our stop criteria. Anything else before we wrap?
+Lidia: Just a reminder that the legal disclaimer on the beta expectations screen needs a final review.
+Amr: Action item: Amr will review the legal disclaimer and confirm the final copy by Thursday.
+Hana: I'll loop in legal today.
+Omar: And I'll check that push categories match the remote config before the build goes out.
+Amr: Great. Quick recap: onboarding drops to four screens, push opt-in moves to post-first-action, beta stays invite-only with one referral per user, and we stop rollout if crash-free sessions fall below ninety-five percent.
+Lidia: Got it.
+Hana: See everyone at the demo Friday.
+Omar: Later.
